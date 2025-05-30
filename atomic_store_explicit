@@ -1,0 +1,13 @@
+#include <stdatomic.h>
+#include <stdio.h>
+
+int main() {
+    _Atomic int a = 0;
+
+    // 以顺序一致性存储新值
+    atomic_store_explicit(&a, 42, memory_order_seq_cst);
+
+    printf("a = %d\n", atomic_load(&a));
+
+    return 0;
+}
