@@ -1,1 +1,167 @@
 将从最简单的类型开始实现
+
+ldb_get
+
+从sst中查找
+rc = ldb_version_get(current, options, &lkey, value, &stats);
+
+ldb_version_for_each_overlapping
+
+ldb_filemeta_t *f = ver->files[0].items[i];
+先遍历每一个meta，把有可能找到的文件加到tmp里。
+
+(gdb) p f
+$4 = (ldb_filemeta_t *) 0x63cc70
+
+10598	    if (ldb_compare(ucmp, user_key, &small_key) >= 0 &&
+10599	        ldb_compare(ucmp, user_key, &large_key) <= 0) {
+10600	      ldb_vector_push(&tmp, f);
+10601	    }
+
+if (tmp.length > 0) {
+
+if (!func(arg, 0, tmp.items[i])) {
+
+getstate_t *state = (getstate_t *)arg;
+
+ldb_tables_t *cache = state->vset->table_cache;
+
+14635	  state->status = ldb_tables_get(cache,
+14636	                                 state->options,
+14637	                                 f->number,
+14638	                                 f->file_size,
+14639	                                 &state->ikey,
+14640	                                 &state->saver,
+14641	                                 save_value);
+
+
+ldb_tables_get
+
+rc = find_table(cache, file_number, file_size, &handle);
+
+find_table
+
+*handle = ldb_lru_lookup(cache->lru, &key);
+
+9902	  if (*handle == NULL) {
+(gdb) 
+9903	    int use_mmap = cache->options->use_mmap;
+
+if (!ldb_table_filename(fname, sizeof(fname), cache->dbname, file_number))
+
+file_number 是文件号,ldb_table_filename 制造出文件名
+ldb_table_filename (buf=0x7fffffffd9f0 "P\334\377\377\377\177", size=1024, dbname=0x632150 "/data1/guangkun/lcdb/tmp", num=5) at lcdb.c:9877
+
+return make_filename(buf, size, dbname, num, "ldb");
+
+ldb_randfile_create 打开文件，并构建ldb_rfile_t结构体
+rc = ldb_randfile_create(fname, &file, use_mmap);
+
+ldb_randfile_create
+
+fd = ldb_open_file(filename, O_RDONLY, 0);
+
+*file = ldb_malloc(sizeof(ldb_rfile_t));
+
+ldb_randfile_init
+
+int acquired = ldb_limiter_acquire(limiter);
+
+rc = ldb_table_open(cache->options, file, file_size, &table);
+
+rc = ldb_rfile_pread(file,
+
+ldb_rfile_pread
+
+return ldb_rfile_pread0(file, result, buf, count, offset);
+
+ldb_rfile_pread0
+
+nread = ldb_read(fd, buf, count);
+(gdb) p count
+$20 = 48
+
+input 刚才读到的48字节
+if (!ldb_footer_import(&footer, &input))
+
+rc = ldb_read_block(&contents,
+
+if (handle->size > SIZE_MAX - LDB_TRAILER_SIZE)
+
+3193	  if (!ldb_rfile_mapped(file)) {
+
+if ((buf = malloc(len)) == NULL)
+
+rc = ldb_rfile_pread(file, &contents, buf, len, handle->offset);
+
+读27个字节
+if (contents.size != len) {
+
+if (options->verify_checksums) {
+
+if (data != buf) {
+
+result->cachable = 1;
+
+ldb_block_t *index_block = ldb_block_create(&contents);
+
+if (options->block_cache != NULL)
+
+tbl->cache_id = ldb_lru_id(options->block_cache);
+
+ldb_table_read_meta(tbl, &footer);
+
+table_entry_t *entry = ldb_malloc(sizeof(table_entry_t));
+
+*handle = ldb_lru_insert(cache->lru, &key, entry, 1, &delete_entry);
+(gdb) p *key
+$43 = {data = 0x7fffffffde00 "\005", size = 8, alloc = 0}
+
+
+ldb_table_t *table = ((table_entry_t *)ldb_lru_value(handle))->table;
+
+rc = ldb_table_internal_get(table, options, k, arg, handle_result);
+
+ldb_table_internal_get
+
+index_iter = ldb_blockiter_create(table->index_block,
+
+ldb_iter_seek(index_iter, k);
+
+ldb_blockiter_seek
+
+ while (left < right) {
+
+if (do_compare(iter, &iter->key, target) >= 0)
+
+ldb_iter_t *block_iter = ldb_table_blockreader(table,
+
+ldb_table_blockreader
+
+ldb_lru_t *block_cache = table->options.block_cache;
+
+if (!ldb_handle_import(&handle, index_value))
+
+ldb_handle_read
+
+if (!ldb_varint64_read(&z->offset, xp, xn))
+
+if (block_cache != NULL) {
+
+把块的信息写到cache_key_buffer
+ldb_fixed64_write(cache_key_buffer + 0, table->cache_id);
+ldb_fixed64_write(cache_key_buffer + 8, handle.offset);
+ldb_slice_set(&key, cache_key_buffer, sizeof(cache_key_buffer));
+
+看这个块是不是存在了
+cache_handle = ldb_lru_lookup(block_cache, &key);
+
+
+rc = ldb_read_block(&contents, table->file, options, &handle);
+
+block = ldb_block_create(&contents);
+
+if (contents.cachable && options->fill_cache) {
+
+cache_handle = ldb_lru_insert(block_cache,
+
