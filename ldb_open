@@ -33,6 +33,26 @@ cache->lru = ldb_lru_create(entries);
 (gdb) p entries
 $10 = 990
 
+ldb_rename_file(info, old);
+ldb_rename_file (from=0x7fffffffd3d0 "/data1/guangkun/lcdb/tmp/LOG", to=0x7fffffffd7d0 "/data1/guangkun/lcdb/tmp/LOG.old") at lcdb.c:11833
+
+7635	  if (result.block_cache == NULL)
+(gdb) 
+7636	    result.block_cache = ldb_lru_create(8 << 20);
+
+
+lru_shard_init (lru=0x632970) at lcdb.c:7559
+
+lru_table_init(&lru->table);
+
+lru_table_resize(tbl);
+
+7868	  db->versions = ldb_versions_create(db->dbname,
+7869	                                     &db->options,
+7870	                                     db->table_cache,
+7871	                                     &db->internal_comparator);
+
+
 
 
 
