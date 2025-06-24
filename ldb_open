@@ -1,1 +1,38 @@
+尝试lock
+ldb_spinlock(&lock);
+
+if (!ldb_path_absolute(path, sizeof(path) - 35, dbname))
+
+(gdb) p path
+$3 = "/data1/guangkun/lcdb/tmp", '\000' <repeats 752 times>...
+
+ db = ldb_create(path, options);
+
+ldb_t *db = ldb_malloc(sizeof(ldb_t));
+
+memcpy(db->dbname, dbname, len + 1);
+
+db->owns_cache = (db->options.block_cache != options->block_cache);
+
+7835	  db->table_cache = ldb_tables_create(db->dbname,
+7836	                                      &db->options,
+7837	                                      table_cache_size(&db->options));
+
+table_cache_size (sanitized_options=0x6320e0) at lcdb.c:7687
+7687	  return sanitized_options->max_open_files - non_table_cache_files;
+
+(gdb) p non_table_cache_files
+$7 = 10
+(gdb) p sanitized_options->max_open_files 
+$8 = 1000
+
+ldb_tables_t *cache = ldb_malloc(sizeof(ldb_tables_t));
+
+cache->lru = ldb_lru_create(entries);
+
+(gdb) p entries
+$10 = 990
+
+
+
 
