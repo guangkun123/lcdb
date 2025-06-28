@@ -52,6 +52,67 @@ lru_table_resize(tbl);
 7870	                                     db->table_cache,
 7871	                                     &db->internal_comparator);
 
+ldb_versions_create
+ldb_versions_t *vset = ldb_malloc(sizeof(ldb_versions_t));
+
+ldb_versions_init(vset, dbname, options, table_cache, cmp);
+
+ldb_versions_init
+
+vset->next_file_number = 2;
+
+vset->manifest_file_number = 0; /* Filled by recover(). */
+
+vset->current = NULL;
+
+ldb_version_init(&vset->dummy_versions, vset);
+
+ldb_version_init (ver=0x634830, vset=0x6347b0) at lcdb.c:7722
+
+ver->vset = vset;
+
+ldb_edit_init(&edit);
+
+ldb_edit_init
+
+前面都是初始化各种结构体
+
+rc = ldb_recover(db, &edit, &save_manifest);
+
+ldb_recover
+
+if (!ldb_lock_filename(path, sizeof(path), db->dbname))
+
+rc = ldb_lock_file(path, &db->db_lock);
+
+if (!ldb_current_filename(path, sizeof(path), db->dbname))
+
+(gdb) p path
+$4 = "/data1/guangkun/lcdb/tmp/CURRENT
+
+rc = ldb_versions_recover(db->versions, save_manifest);
+
+ldb_versions_recover
+
+rc = read_current_filename(fname, sizeof(fname), vset->dbname);
+
+read_current_filename
+
+rc = ldb_read_file(path, &data);
+
+name = (char *)data.data;
+
+(gdb) p name
+$5 = 0x634b70 "MANIFEST-000048\n"
+
+9073	    ldb_reader_init(&reader, file, &reporter, 1, 0);
+(gdb) p file
+$11 = (struct ldb_rfile_s *) 0x634b20
+(gdb) p *file
+$12 = {filename = 0x0, fd = 9, limiter = 0x0, mapped = 0, base = 0x0, length = 0, mutex = {handle = 0x0}, has_mutex = 0}
+
+
+
 
 
 
