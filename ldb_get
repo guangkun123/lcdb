@@ -23,6 +23,8 @@ $4 = (ldb_filemeta_t *) 0x63cc70
 
 if (tmp.length > 0) {
 
+ldb_vector_sort(&tmp, newest_first); //对sst文件做排序，估计是根据优先级
+
 if (!func(arg, 0, tmp.items[i])) {
 
 getstate_t *state = (getstate_t *)arg;
