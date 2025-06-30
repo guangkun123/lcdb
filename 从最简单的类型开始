@@ -5,6 +5,9 @@ ldb_get
 从sst中查找
 rc = ldb_version_get(current, options, &lkey, value, &stats);
 
+14685	  state.ikey = ldb_lkey_internal_key(k);   //做类型转换，ldb_lkey_s to ldb_slice_s
+
+
 ldb_version_for_each_overlapping
 
 ldb_filemeta_t *f = ver->files[0].items[i];
