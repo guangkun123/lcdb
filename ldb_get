@@ -80,6 +80,11 @@ int acquired = ldb_limiter_acquire(limiter);
 rc = ldb_table_open(cache->options, file, file_size, &table);
 
 rc = ldb_rfile_pread(file,
+                       &input,
+                       buf,
+                       LDB_FOOTER_SIZE,
+                       size - LDB_FOOTER_SIZE); // 从size-48的offset开始，读48字节
+
 
 ldb_rfile_pread
 
@@ -103,6 +108,9 @@ if (handle->size > SIZE_MAX - LDB_TRAILER_SIZE)
 if ((buf = malloc(len)) == NULL)
 
 rc = ldb_rfile_pread(file, &contents, buf, len, handle->offset);
+
+ldb_read_block (result=0x7fffffffd940, file=0x635ee0, options=0x7fffffffd990, handle=0x7fffffffd930)
+//根据handle->size读字节到result
 
 读27个字节
 if (contents.size != len) {
