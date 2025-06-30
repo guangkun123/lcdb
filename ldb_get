@@ -46,7 +46,12 @@ rc = find_table(cache, file_number, file_size, &handle);
 
 find_table
 
+9896	  ldb_fixed64_write(buf, file_number);
+(gdb) n
+9898	  ldb_slice_set(&key, buf, sizeof(buf));
+
 *handle = ldb_lru_lookup(cache->lru, &key);
+
 
 9902	  if (*handle == NULL) {
 (gdb) 
