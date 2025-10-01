@@ -1,1 +1,26 @@
+typedef struct ldb_slice_s {
+  uint8_t *data;
+  size_t size;  //大小
+  size_t alloc; //分配了多少空间
+} ldb_slice_t;
+
+ldb_slice_t
+ldb_slice(const uint8_t *xp, size_t xn) {
+  ldb_slice_t z;
+
+  z.data = (uint8_t *)xp;
+  z.size = xn;
+  z.alloc = 0;
+
+  return z;
+}
+
+ldb_slice_t
+ldb_string(const char *xp) {
+  return ldb_slice((const uint8_t *)xp, strlen(xp));
+}
+
+key = ldb_string("aa");
+
+
 
