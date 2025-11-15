@@ -110,6 +110,14 @@ $32 = (ldb_version_t *) 0x634830
 $33 = (ldb_version_t *) 0x6349d0
 
 
+ldb_version_init(&vset->dummy_versions, vset)
+只是把 dummy_versions 这个栈上/静态分配的哨兵初始化成“空 Version”状态，让它的 prev/next 指向自己，形成空双向循环链表。
+此时 vset->current_ == NULL，数据库仍然没有一个可查询的正式 Version。
+ldb_versions_append_version(vset, ldb_version_create(vset))
+ldb_version_create 会在堆里克隆当前的 Manifest 文件里记录的那一套 SST 文件元信息，生成第一个真正的、带数据的 Version。
+append_version 把它插到链表尾部，并令 vset->current_ = 这个新 Version。
+
+
 
 ldb_edit_init(&edit);
 
