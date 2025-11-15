@@ -121,6 +121,8 @@ append_version 把它插到链表尾部，并令 vset->current_ = 这个新 Vers
 
 ldb_edit_init(&edit);
 
+出现在 LevelDB 提交一次版本变更之前（LogAndApply 里），作用是把 VersionEdit 结构体归零，让它准备好记录“这次要改什么”
+
 ldb_edit_init
 
 前面都是初始化各种结构体
