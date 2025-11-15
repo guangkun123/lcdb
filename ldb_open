@@ -73,6 +73,11 @@ ldb_version_init (ver=0x634830, vset=0x6347b0) at lcdb.c:7722
 
 ver->vset = vset;
 
+ldb_buffer_init(&vset->compact_pointer[level]);
+在 LevelDB 的 size-compaction 里，一次最多只会选 一层里相邻的、总大小不超过配置阈值 的 SST 文件，具体规则如下：
+从 compact_pointer_[level] 往后扫，按 文件顺序 把相邻文件累加。
+当 vset->compact_pointer_[level] 指向的 key 已经 超过该层最大 key（即“找不到文件”）时，LevelDB 会 把指针回卷到该层第一个文件，继续按顺序挑文件做 size-compaction。
+
 ldb_edit_init(&edit);
 
 ldb_edit_init
