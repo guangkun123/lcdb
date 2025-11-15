@@ -78,6 +78,14 @@ ldb_buffer_init(&vset->compact_pointer[level]);
 从 compact_pointer_[level] 往后扫，按 文件顺序 把相邻文件累加。
 当 vset->compact_pointer_[level] 指向的 key 已经 超过该层最大 key（即“找不到文件”）时，LevelDB 会 把指针回卷到该层第一个文件，继续按顺序挑文件做 size-compaction。
 
+ldb_versions_append_version(vset, ldb_version_create(vset));
+ldb_version_create(vset)
+以当前 VersionSet 里 正在使用的 Version（vset->current_） 为模板，新建一个空的 Version 对象，
+ldb_versions_append_version(vset, ...)
+把刚建好的新版本插到 vset->dummy_versions_ 双向循环链表的尾部（紧贴在 dummy_versions_ 之前），并：
+让 vset->current_ 指向它，使之成为 最新当前版本；
+把旧版本的引用计数减 1；若引用为 0，就把旧版本从链表摘掉并释放内存。
+
 ldb_edit_init(&edit);
 
 ldb_edit_init
