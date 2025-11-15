@@ -67,6 +67,7 @@ vset->manifest_file_number = 0; /* Filled by recover(). */
 vset->current = NULL;
 
 ldb_version_init(&vset->dummy_versions, vset);
+vset 通过 dummy_versions_ 来维护所有 Version 对象的生命周期
 
 ldb_version_init (ver=0x634830, vset=0x6347b0) at lcdb.c:7722
 
