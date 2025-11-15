@@ -6,3 +6,5 @@ int fd = ldb_open_file(filename, O_APPEND | O_WRONLY | O_CREAT, 0644);
 
  p info
 $11 = "/data1/guangkun/lcdb/tmp/LOG",
+
+保存到result.info_log
