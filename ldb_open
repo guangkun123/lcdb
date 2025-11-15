@@ -86,11 +86,30 @@ ldb_versions_append_version(vset, ...)
 让 vset->current_ 指向它，使之成为 最新当前版本；
 把旧版本的引用计数减 1；若引用为 0，就把旧版本从链表摘掉并释放内存。
 
+ldb_version_init 创建代码里面只有初始化文件
+
 v->prev = vset->dummy_versions.prev;   // 1. 新节点的前驱指向“旧尾节点”
 v->next = &vset->dummy_versions;       // 2. 新节点的后继指向“哨兵头节点”
 vset->dummy_versions 是头节点；
 
-ldb_version_init 创建代码里面只有初始化文件
+
+
+(gdb) p vset->dummy_versions
+$29 = {vset = 0x6347b0, next = 0x6349d0, prev = 0x6349d0, refs = 0, files = {{items = 0x0, length = 0, alloc = 0}, {items = 0x0, length = 0, alloc = 0}, {items = 0x0, length = 0, alloc = 0}, {items = 0x0, length = 0, 
+      alloc = 0}, {items = 0x0, length = 0, alloc = 0}, {items = 0x0, length = 0, alloc = 0}, {items = 0x0, length = 0, alloc = 0}}, file_to_compact = 0x0, file_to_compact_level = -1, compaction_score = -1, 
+  compaction_level = -1}
+(gdb) p vset->dummy_versions.next
+$30 = (ldb_version_t *) 0x6349d0
+(gdb) p *vset->dummy_versions.next
+$31 = {vset = 0x6347b0, next = 0x634830, prev = 0x634830, refs = 1, files = {{items = 0x0, length = 0, alloc = 0}, {items = 0x0, length = 0, alloc = 0}, {items = 0x0, length = 0, alloc = 0}, {items = 0x0, length = 0, 
+      alloc = 0}, {items = 0x0, length = 0, alloc = 0}, {items = 0x0, length = 0, alloc = 0}, {items = 0x0, length = 0, alloc = 0}}, file_to_compact = 0x0, file_to_compact_level = -1, compaction_score = -1, 
+  compaction_level = -1}
+(gdb) p &vset->dummy_versions
+$32 = (ldb_version_t *) 0x634830
+(gdb) p vset->dummy_versions.next
+$33 = (ldb_version_t *) 0x6349d0
+
+
 
 ldb_edit_init(&edit);
 
