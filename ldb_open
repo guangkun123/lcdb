@@ -26,6 +26,7 @@ $7 = 10
 (gdb) p sanitized_options->max_open_files 
 $8 = 1000
 
+创建cache
 ldb_tables_t *cache = ldb_malloc(sizeof(ldb_tables_t));
 
 cache->lru = ldb_lru_create(entries);
