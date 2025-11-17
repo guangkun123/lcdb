@@ -162,6 +162,13 @@ ldb_writer_init(&log, file, 0);
 
 ldb_edit_export(&record, &new_db);
 
+rc = ldb_writer_add_record(&log, &record);
+
+(gdb) p record
+$32 = {data = 0x644bb0 "\001\032leveldb.BytewiseComparator\002", size = 34, alloc = 48}
+
+rc = ldb_set_current_file(db->dbname, 1);
+
 rc = ldb_versions_recover(db->versions, save_manifest);
 
 ldb_versions_recover
