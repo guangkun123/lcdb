@@ -135,6 +135,9 @@ if (!ldb_lock_filename(path, sizeof(path), db->dbname))
 
 rc = ldb_lock_file(path, &db->db_lock);
 
+p path
+$7 = "/data1/guangkun/lcdb/tmp/LOCK
+
 if (!ldb_current_filename(path, sizeof(path), db->dbname))
 
 (gdb) p path
