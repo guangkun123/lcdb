@@ -143,6 +143,11 @@ if (!ldb_current_filename(path, sizeof(path), db->dbname))
 (gdb) p path
 $4 = "/data1/guangkun/lcdb/tmp/CURRENT
 
+rc = ldb_new_db(db);
+
+if (!ldb_desc_filename(manifest, sizeof(manifest), db->dbname, 1))
+
+
 rc = ldb_versions_recover(db->versions, save_manifest);
 
 ldb_versions_recover
