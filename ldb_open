@@ -147,6 +147,20 @@ rc = ldb_new_db(db);
 
 if (!ldb_desc_filename(manifest, sizeof(manifest), db->dbname, 1))
 
+sprintf(tmp, "MANIFEST-%s", id);
+
+rc = ldb_truncfile_create(manifest, &file);
+
+p manifest
+$18 = "/data1/guangkun/lcdb/tmp/MANIFEST-000001
+
+ldb_edit_init(&new_db);
+
+ldb_edit_set_next_file(&new_db, 2);
+
+ldb_writer_init(&log, file, 0);
+
+ldb_edit_export(&record, &new_db);
 
 rc = ldb_versions_recover(db->versions, save_manifest);
 
